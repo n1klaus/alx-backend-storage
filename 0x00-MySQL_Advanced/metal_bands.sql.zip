@@ -1,0 +1,15 @@
+--2023-02-11 08:23:52--  https://intranet.alxswe.com/rltoken/uPn947gnZLaa0FJrrAFTGQ
+Resolving intranet.alxswe.com (intranet.alxswe.com)... 44.196.237.107, 54.208.147.86, 3.229.211.43, ...
+Connecting to intranet.alxswe.com (intranet.alxswe.com)|44.196.237.107|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://intranet.alxswe.com/auth/sign_in [following]
+--2023-02-11 08:23:52--  https://intranet.alxswe.com/auth/sign_in
+Reusing existing connection to intranet.alxswe.com:443.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘uPn947gnZLaa0FJrrAFTGQ.1’
+
+     0K ...                                                     403M=0s
+
+2023-02-11 08:23:52 (403 MB/s) - ‘uPn947gnZLaa0FJrrAFTGQ.1’ saved [3861]
+
