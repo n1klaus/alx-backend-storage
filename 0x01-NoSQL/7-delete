@@ -1,0 +1,3 @@
+// Deletes all documents with `name="Holberton school"` in the collection `school`
+var school = db.getCollection("school")
+school.remove({"name": "Holberton school"}, {multi: true})
