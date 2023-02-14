@@ -1,0 +1,3 @@
+// Lists all documents with `name="Holberton school"` in the collection `school`
+var school = db.getCollection("school")
+school.find({"name": "Holberton school"})
