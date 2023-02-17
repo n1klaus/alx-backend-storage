@@ -1,10 +1,22 @@
 #!/usr/bin/env python3
 """Cache class model for Redis"""
 
+from functools import wraps
 import json
 import redis
 from typing import Any, Callable
 import uuid
+
+
+def count_calls(wrapped: Callable) -> Callable:
+    """Decorator function to count number of calls to method"""
+
+    @wraps(wrapped)
+    def wrapper(self, args, **kwargs) -> Callable:
+        """Increments the number of calls made to a function on each call"""
+        self._redis.incrby(wrapped.__qualname__, 1)
+        return wrapped
+    return wrapper
 
 
 class Cache:
@@ -15,15 +27,16 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Any) -> str:
         """Generates a random key and stores the input data using the key"""
         key: str = str(uuid.uuid4())
-        if not isinstance(data, (int, str, bytes)):
-            data = json.dumps(data)
+        # if not isinstance(data, (int, str, bytes)):
+        #    data = json.dumps(data)
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Callable) -> Any:
+    def get(self, key: str, fn: Callable = None) -> Any:
         """Returns obj stored using provided key"""
         value: Any = self._redis.get(key)
         if value:
