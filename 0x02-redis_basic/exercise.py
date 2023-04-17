@@ -12,10 +12,10 @@ def count_calls(method: Callable) -> Callable:
     """Decorator function to count number of calls to method"""
 
     @wraps(method)
-    def wrapper(self, args, **kwargs) -> Callable:
+    def wrapper(self, *args, **kwargs) -> Callable:
         """Increments the number of calls made to a function on each call"""
         self._redis.incrby(method.__qualname__, 1)
-        return method
+        return method(self, *args, **kwargs)
     return wrapper
 
 
@@ -28,7 +28,7 @@ def call_history(method: Callable) -> Callable:
         self._redis.rpush(f"{method.__qualname__}:inputs", str(*args))
         result = self.__call__(method, *args, **kwargs)
         self._redis.rpush(f"{method.__qualname__}:outputs", str(result))
-        return method
+        return method(self, *args, **kwargs)
     return wrapper
 
 
@@ -58,10 +58,10 @@ class Cache:
 
     @call_history
     @count_calls
-    def store(self, data: Union[int, float, str, bytes]) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """Generates a random key and stores the input data using the key"""
         key: str = str(uuid.uuid4())
-        if not isinstance(data, (int, float, str, bytes)):
+        if not isinstance(data, (str, bytes, int, float)):
             data = json.dumps(data)
         self._redis.set(key, data)
         return key
