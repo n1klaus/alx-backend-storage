@@ -4,7 +4,7 @@
 from pymongo.collection import Collection
 
 
-def top_students(mongo_collection: Collection) -> list:
+def top_students(mongo_collection) -> list:
     """
     Args:
         mongo_collection(Collection): mongo database collection of students
