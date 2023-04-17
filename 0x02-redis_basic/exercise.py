@@ -10,11 +10,10 @@ import uuid
 
 def count_calls(method: Callable) -> Callable:
     """Decorator function to count number of calls to method"""
-
     @wraps(method)
     def wrapper(self, *args, **kwargs) -> Callable:
         """Increments the number of calls made to a function on each call"""
-        self._redis.incrby(method.__qualname__, 1)
+        self._redis.incr(method.__qualname__)
         return method(self, *args, **kwargs)
     return wrapper
 
