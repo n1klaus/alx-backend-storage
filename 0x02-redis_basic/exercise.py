@@ -36,7 +36,9 @@ def replay(method: Callable, cache: Any) -> None:
     counter = cache.get(method.__qualname__).decode("utf-8")
     print(f"{method.__qualname__} was called {counter} times:")
     inputs = list(cache._redis.lrange(f"{method.__qualname__}:inputs", 0, -1))
-    outputs = list(cache._redis.lrange(f"{method.__qualname__}:outputs", 0, -1))
+    outputs = list(
+        cache._redis.lrange(
+            f"{method.__qualname__}:outputs", 0, -1))
     for i, o in zip(inputs, outputs):
         print("{0}(*{1}) -> {2}"
               .format(method.__qualname__, i.decode('utf-8'),
