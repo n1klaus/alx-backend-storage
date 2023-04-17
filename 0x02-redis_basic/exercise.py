@@ -25,9 +25,9 @@ def call_history(method: Callable) -> Callable:
     def wrapper(self, *args, **kwargs) -> Callable:
         """Pushes input and output to the end of a list"""
         self._redis.rpush(f"{method.__qualname__}:inputs", str(*args))
-        result = self.__call__(method, *args, **kwargs)
+        result = method(self, *args, **kwargs)
         self._redis.rpush(f"{method.__qualname__}:outputs", str(result))
-        return method(self, *args, **kwargs)
+        return result
     return wrapper
 
 
@@ -51,12 +51,8 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def __call__(self, method, *args, **kwargs):
-        """Caller method to execute instance method"""
-        return method(self, *args, **kwargs)
-
-    @call_history
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Generates a random key and stores the input data using the key"""
         key: str = str(uuid.uuid4())
