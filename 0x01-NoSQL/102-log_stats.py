@@ -16,7 +16,7 @@ if __name__ == "__main__":
             print("\tmethod {}: {}".format(m, c))
         s = collection.count_documents({"method": "GET", "path": "/status"})
         print("{} status check".format(s))
-        print("IPS:")
+        print("IPs:")
         ip_occurence = collection.aggregate([
             {
                 "$group": {
