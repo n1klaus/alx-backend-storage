@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Top students by average score"""
 
 from pymongo.collection import Collection
