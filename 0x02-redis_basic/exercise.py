@@ -4,10 +4,8 @@
 from functools import wraps
 import json
 import redis
-from typing import Any, Callable
+from typing import Any, Callable, Union
 import uuid
-
-cache = redis.Redis()
 
 
 def count_calls(method: Callable) -> Callable:
@@ -34,7 +32,7 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(method: Callable, cache: Any = cache) -> None:
+def replay(method: Callable, cache: Any) -> None:
     """Displays the history of calls of a function"""
     counter = cache.get(method.__qualname__).decode("utf-8")
     print(f"{method.__qualname__} was called {counter} times:")
@@ -51,7 +49,7 @@ class Cache:
 
     def __init__(self):
         """Constructor method for new instances"""
-        self._redis = cache
+        self._redis = redis.Redis()
         self._redis.flushdb()
 
     def __call__(self, method, *args, **kwargs):
@@ -60,15 +58,15 @@ class Cache:
 
     @call_history
     @count_calls
-    def store(self, data: Any) -> str:
+    def store(self, data: Union[int, float, str, bytes]) -> str:
         """Generates a random key and stores the input data using the key"""
         key: str = str(uuid.uuid4())
-        if not isinstance(data, (int, str, bytes)):
+        if not isinstance(data, (int, float, str, bytes)):
             data = json.dumps(data)
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Callable = None) -> Any:
+    def get(self, key: str, fn: Union[Callable, None] = None) -> Any:
         """Returns obj stored using provided key"""
         value: Any = self._redis.get(key)
         if value:
