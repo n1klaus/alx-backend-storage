@@ -24,9 +24,9 @@ def call_history(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(self, *args, **kwargs) -> Callable:
         """Pushes input and output to the end of a list"""
-        self._redis.rpush(f"{method.__qualname__}:inputs", str(*args))
+        self._redis.rpush(f"{method.__qualname__}:inputs", str(args))
         result = method(self, *args, **kwargs)
-        self._redis.rpush(f"{method.__qualname__}:outputs", str(result))
+        self._redis.rpush(f"{method.__qualname__}:outputs", result)
         return result
     return wrapper
 
