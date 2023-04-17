@@ -2,14 +2,15 @@
 """Top students by average score"""
 
 from pymongo.collection import Collection
+from pymongo.command_cursor import CommandCursor
 
 
-def top_students(mongo_collection) -> list:
+def top_students(mongo_collection: Collection) -> CommandCursor:
     """
     Args:
         mongo_collection(Collection): mongo database collection of students
     Returns:
-        (list) the top students sorted by average score
+        (CommandCursor) the top students sorted by average score
     """
     top_students = mongo_collection.aggregate([
         {
@@ -26,4 +27,4 @@ def top_students(mongo_collection) -> list:
             }
         }
     ])
-    return list(top_students)
+    return top_students
